@@ -56,12 +56,11 @@ tape(`service method invocation by "channels" sending/recieving individual messa
   // and re-directs them to a real method implementation.
   // Data are loaded from the channel by subscribing on specific events 
   // and responses are send back using the emit channel method.
+  const serverHandler = newServer({ service, serd, descriptors })
+
+  // 
   const serverChannel = newChannel();
-  const stopServer = newServer({
-    channel: serverChannel,
-    service,
-    serd, descriptors,
-  });
+  const stop = serverHandler(serverChannel);
 
   // --------------------------
   // Step 2: Implementing the client-side part.
@@ -70,13 +69,10 @@ tape(`service method invocation by "channels" sending/recieving individual messa
   // Create a client-side channel:
   let idCounter = 0;
   const newCallId = () => `call-${Date.now()}-${idCounter++}`;
+  const clientHandler = newClient({ newCallId, serd, descriptors });
 
   const clientChannel = newChannel();
-  const clientStub = newClient({
-    channel: clientChannel,
-    newCallId,
-    serd, descriptors
-  });
+  const clientStub = clientHandler(clientChannel);
 
   // --------------------------
   // Step 3: Connect client with the server.

@@ -3,9 +3,9 @@
 
 
 "@agen/utils@^0.8.2":
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/@agen/utils/-/utils-0.8.3.tgz#49410522176bec50fb3a97648a591fb4455bdabd"
-  integrity sha512-0rJVI1GpcxwQUsPXKOWm7+WIrgT5GOYWQE6xdZvH+X1ztiLUsW7g4DvDxb6YHcOdrHerP4mUJXED0vzxaQ8OcA==
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/@agen/utils/-/utils-0.8.4.tgz#34c70fad5ed6e983c987de52a4e8e1252ecb0b67"
+  integrity sha512-c7ZsM7TcCkPOmNO2YcejJJdjJG14Wi+crhjLZmrUG9qgvWJzZQvby7YcGkouU74DAkSSy2S4KJDs+ljtLmD+gw==
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4":
   version "7.12.13"

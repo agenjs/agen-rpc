@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@agen/utils@^0.8.2":
-  version "0.8.4"
-  resolved "https://registry.yarnpkg.com/@agen/utils/-/utils-0.8.4.tgz#34c70fad5ed6e983c987de52a4e8e1252ecb0b67"
-  integrity sha512-c7ZsM7TcCkPOmNO2YcejJJdjJG14Wi+crhjLZmrUG9qgvWJzZQvby7YcGkouU74DAkSSy2S4KJDs+ljtLmD+gw==
+"@agen/utils@^0.8.4":
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/@agen/utils/-/utils-0.8.5.tgz#52e1ebd9fb7d9d4d436f803a6fd302870659c62e"
+  integrity sha512-GrRgn0MsFasb9va7sfISSIPsvfRYYl1JqfrvqJ9dLtE7VF253mo4X51AJcAaUohXjPVjIx8KwcgKrgzDLckrLg==
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4":
   version "7.12.13"
@@ -1248,12 +1248,12 @@ table@^6.0.4:
     slice-ansi "^4.0.0"
     string-width "^4.2.0"
 
-tape-await@0.1:
+tape-await@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/tape-await/-/tape-await-0.1.2.tgz#41f99110a2bc4728732d8bc058278b2fbf3c0bec"
   integrity sha512-Gt1bXilp9uRTVj+DecLDs37tP1XwGXfFzWVqQEfW7foO9TNacy+aN5TdT0Kv6LI5t/9l3iOE4nX2hr2SQ4+OSg==
 
-tape@5:
+tape@^5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/tape/-/tape-5.1.1.tgz#51e6fc7af0c15cf39faa6aac3d0a1d2ca6fd4744"
   integrity sha512-ujhT+ZJPqSGY9Le02mIGBnyWo7Ks05FEGS9PnlqECr3sM3KyV4CSCXAvSBJKMN+t+aZYLKEFUEo0l4wFJMhppQ==

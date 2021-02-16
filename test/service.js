@@ -7,7 +7,7 @@ export default ({
 
   async* generateMessages({ count = 0 }) {
     for (let i = 0; i < count; i++) {
-      yield { idx: i, message: `Ping ${i}` };
+      yield { idx: i, message: `Message ${i}` };
     }
   },
 

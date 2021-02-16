@@ -1,29 +1,31 @@
-import emitMessages from './emitMessages.js';
-import newMultiplexer from './newMultiplexer.js';
-import recieveMessages from './recieveMessages.js';
+import { interrupt } from '@agen/utils';
+import newInputOutput from './newInputOutput.js';
+import newMessagesIterator from './newMessagesIterator.js';
 
-// Returns a method recieving messages from the given channel, transforming them 
-// to a request stream and calling methods.
-export default function startServerHandler({
-  channel,
-  getMethod,
-  messageKey = 'call:message',
-  initKey = 'call:init',
-}) {
-  const multiplexer = newMultiplexer(channel, messageKey);
-  const handler = async ({ callId, packageName, serviceName, methodName }) => {
-    const callChannel = multiplexer(callId);
-    try {
-      const method = getMethod({ packageName, serviceName, methodName });
-      const request = recieveMessages(callChannel, `request`);
-      let it = method(request);
-      await emitMessages(callChannel, `response`, it);
-    } catch (error) {
-      callChannel.emit(`error`, error);
-    } finally {
-      callChannel.close();
+export default async function startServerHandler({ channel, getMethod, unhandled }) {
+  let channelClosed = false;
+  const [newReader, newWriter] = newInputOutput(channel, unhandled);
+  async function handleCall({ callId, packageName, serviceName, methodName }) {
+    const method = getMethod({ packageName, serviceName, methodName });
+    const request = newReader(callId);
+    // Listen for the "done" event sent by the client part to finish the call.
+    // So the server-side part should stop to send data.
+    let stop = false;
+    channel.on('done', function onDone(options) {
+      if (options.callId !== callId) return;
+      channel.off('done', onDone);
+      stop = true;
+    })
+    const f = interrupt(() => channelClosed || stop);
+
+    const response = f(method(request));
+    await newWriter(callId, response);
+  }  
+  try { 
+    for await (let callInfo of newMessagesIterator(channel, 'init')) {
+      handleCall(callInfo);
     }
-  };
-  channel.on(initKey, handler);
-  return () => channel.off(initKey, handler);
+  } finally {
+    channelClosed = true;
+  }
 }

@@ -5,10 +5,11 @@ import json from "@rollup/plugin-json";
 import {terser} from "rollup-plugin-terser";
 import * as meta from "./package.json";
 
+const external = []; // Object.keys(meta.dependencies || {}).filter(key => /^@agen/.test(key));
 const distName = meta.name.replace('@', '').replace('/', '-');
 const config = {
   input: "src/index.js",
-  external: Object.keys(meta.dependencies || {}).filter(key => /^@agen/.test(key)),
+  external,
   output: {
     file: `dist/${distName}.js`,
     name: "agen",

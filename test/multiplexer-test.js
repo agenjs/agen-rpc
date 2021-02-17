@@ -3,41 +3,7 @@ import { newServer, newClient } from '../src/index.js';
 import { protobuf } from '../dist/agen-rpc-esm.js';
 import EchoService from './service.js';
 import EchoServiceServiceSchema from './service.schema.js';
-
-function newEventEmitter() {
-  const index = {};
-  function on(event, listener) {
-    (index[event] = index[event] || []).push(listener);
-    return () => off(event, listener);
-  }
-  function off(event, listener) {
-    index[event] = (index[event] || []).filter(l => l !== listener);
-  }
-  function emit(event, ...args) {
-    // "Broadcast" event:
-    for (let l of (index['*'] || [])) { l(event, ...args); }
-    for (let l of (index[event] || [])) { l(...args); }
-  }
-  return { on, off, emit };
-}
-
-function newChannel() {
-  const reader = newEventEmitter();
-  const writer = newEventEmitter();
-  return {
-    _reader: reader,
-    _writer: writer,
-    on: reader.on,
-    off: reader.off,
-    emit: writer.emit,
-    connect: (channel) => {
-      const list = [];
-      list.push(channel._writer.on('*', reader.emit));
-      list.push(writer.on('*', channel._reader.emit));
-      return () => list.forEach(r => r()); // Unregister connection
-    }
-  }
-}
+import newChannel from './newChannel.js';
 
 tape(`newMultiplexer - socket.io-like server-side communication`, async (t) => {
 
@@ -103,7 +69,8 @@ tape(`newMultiplexer - socket.io-like server-side communication`, async (t) => {
     responses.push(response);
     if (responses.length === 7) break;
   }
-  clientChannel.emit('disconnect')
+  await clientChannel.call('disconnect');
+  
   await new Promise(r => setTimeout(r, 10));
   t.deepEqual(responses, [
     { idx: 0, message: 'Message 0' },

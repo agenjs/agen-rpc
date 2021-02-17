@@ -8,6 +8,7 @@ export default function newEventEmitter() {
     index[event] = (index[event] || []).filter(l => l !== listener);
   }
   function emit(event, ...args) {
+    // "Broadcast" event:
     for (let l of (index['*'] || [])) { l(event, ...args); }
     for (let l of (index[event] || [])) { l(...args); }
   }

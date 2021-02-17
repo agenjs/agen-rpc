@@ -5,7 +5,7 @@ export default function newMultiplexer({ channel, messageKey = 'message', unhand
   const handler = ({ callId, key, payload }) => {
     const emitter = index[callId];
     if (!emitter) unhandled({ callId, key, payload });
-    else emitter.emit(key, ...payload);
+    else emitter.emit(key, payload);
   };
   channel.on(messageKey, handler);
   return (callId) => {
@@ -14,7 +14,7 @@ export default function newMultiplexer({ channel, messageKey = 'message', unhand
     return {
       on: emitter.on,
       off: emitter.off,
-      emit(key, ...payload) { channel.emit(messageKey, { callId, key, payload }); },
+      emit(key, payload) { channel.emit(messageKey, { callId, key, payload }); },
       close
     };
   };

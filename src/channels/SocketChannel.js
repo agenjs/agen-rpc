@@ -47,7 +47,7 @@ export default class SocketChannel {
       } catch (error) {
         Object.assign(obj, serializeError(error));
       } finally {
-        callback(obj);
+        callback && callback(obj);
       }
     })
   }

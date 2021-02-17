@@ -1,5 +1,5 @@
 import tape from "tape-await";
-import { newClient, newServer, protobuf } from '../dist/agen-rpc-esm.js';
+import { newClient, newServer, protobuf, channels } from '../dist/agen-rpc-esm.js';
 import EchoService from './service.js';
 import EchoServiceServiceSchema from './service.schema.js';
 
@@ -10,8 +10,8 @@ tape(`service method invocation by "channels" sending/recieving individual messa
   // * on - registers a listener for a specific even type
   // * off - remove registered listener
   function newChannel() {
-    const reader = newEventEmitter();
-    const writer = newEventEmitter();
+    const reader = channels.newEventEmitter();
+    const writer = channels.newEventEmitter();
     return {
       _reader: reader,
       _writer: writer,
@@ -24,21 +24,6 @@ tape(`service method invocation by "channels" sending/recieving individual messa
         list.push(writer.on('*', channel._reader.emit));
         return () => list.forEach(r => r()); // Unregister connection
       }
-    }
-    function newEventEmitter() {
-      const index = {};
-      function on(event, listener) {
-        (index[event] = index[event] || []).push(listener);
-        return () => off(event, listener);
-      }
-      function off(event, listener) {
-        index[event] = (index[event] || []).filter(l => l !== listener);
-      }
-      function emit(event, ...args) {
-        for (let l of (index['*'] || [])) { l(event, ...args); }
-        for (let l of (index[event] || [])) { l(...args); }
-      }
-      return { on, off, emit };
     }
   }  
 

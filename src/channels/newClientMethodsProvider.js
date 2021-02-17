@@ -1,17 +1,31 @@
-import newInputOutput from './newInputOutput.js';
+import { compose, interrupt } from '@agen/utils';
+import emitMessages from './emitMessages.js';
+import newMultiplexer from './newMultiplexer.js';
+import recieveMessages from './recieveMessages.js';
+import readAll from './readAll.js';
 
-export default function newClientMethodsProvider({ channel, newCallId, unhandled, }) {
-  const [newReader, newWriter] = newInputOutput(channel, unhandled);
-  return ({ packageName, serviceName, methodName, ...options }) => async function* (request) {
-    let writePromise, callId;
+// Returns a method providing client-side part transforming client calls to a sequence of 
+// events on the channel.
+
+export default function newClientMethodsProvider({ channel, newCallId, unhandled }) {
+  const multiplexer = newMultiplexer({ channel, unhandled });
+  return ({ packageName, serviceName, methodName }) => async function* (request) {
+    const callId = newCallId();
+    const callChannel = multiplexer(callId);
+    let stop = false, promise;
     try {
-      callId = newCallId();
-      channel.emit('init', { callId, packageName, serviceName, methodName, options });
-      writePromise = newWriter(callId, request);
-      yield* newReader(callId);
+      channel.emit('init', { callId, packageName, serviceName, methodName });
+      promise = readAll(compose(
+        interrupt(() => stop),
+        emitMessages(callChannel),
+      )(request));
+      const response = recieveMessages(callChannel);
+      yield* interrupt(() => stop)(response);
     } finally {
-      channel.emit('done', { callId });
-      await writePromise;
+      stop = true;
+      await promise;
+      // callChannel.emit('done', { callId });
+      callChannel.close();
     }
   };
 }

@@ -1,31 +1,32 @@
-import { interrupt } from '@agen/utils';
-import newInputOutput from './newInputOutput.js';
-import newMessagesIterator from './newMessagesIterator.js';
+import { compose, interrupt } from '@agen/utils';
+import emitMessages from './emitMessages.js';
+import newMultiplexer from './newMultiplexer.js';
+import recieveMessages from './recieveMessages.js';
+import readAll from './readAll.js';
 
-export default async function startServerHandler({ channel, getMethod, unhandled }) {
-  let channelClosed = false;
-  const [newReader, newWriter] = newInputOutput(channel, unhandled);
-  async function handleCall({ callId, packageName, serviceName, methodName }) {
-    const method = getMethod({ packageName, serviceName, methodName });
-    const request = newReader(callId);
-    // Listen for the "done" event sent by the client part to finish the call.
-    // So the server-side part should stop to send data.
-    let stop = false;
-    channel.on('done', function onDone(options) {
-      if (options.callId !== callId) return;
-      channel.off('done', onDone);
-      stop = true;
-    })
-    const f = interrupt(() => channelClosed || stop);
-
-    const response = f(method(request));
-    await newWriter(callId, response);
-  }  
-  try { 
-    for await (let callInfo of newMessagesIterator(channel, 'init')) {
-      handleCall(callInfo);
+// Returns a method recieving messages from the given channel, transforming them 
+// to a request stream and calling methods.
+export default function startServerHandler({ channel, getMethod, unhandled }) {
+  const multiplexer = newMultiplexer({ channel, unhandled });
+  const handler = async ({ callId, packageName, serviceName, methodName }) => {
+    const callChannel = multiplexer(callId);
+    let promise, stop = false;
+    try {
+      callChannel.on('done', () => stop = true);
+      const method = getMethod({ packageName, serviceName, methodName });
+      const request = recieveMessages(callChannel);
+      const response = method(request);
+      promise = readAll(compose( // eslint-disable-line no-unused-vars
+        interrupt(() => stop),
+        emitMessages(callChannel)
+      )(response));
+    } catch (error) {
+      callChannel.emit('error', error);
+    } finally {
+      await promise; 
+      callChannel.close();
     }
-  } finally {
-    channelClosed = true;
-  }
+  };
+  channel.on('init', handler);
+  return () => channel.off('init', handler);
 }

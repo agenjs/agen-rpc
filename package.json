@@ -5,46 +5,54 @@
   "keywords": [
     "async",
     "generators"
-  ],
+  ], 
   "homepage": "https://github.com/agenjs/agen-rpc/",
   "license": "BSD-3-Clause",
   "author": {
     "name": "Mikhail Kotelnikov"
   },
-  "main": "dist/agen-rpc.js",
-  "unpkg": "dist/agen-rpc.min.js",
-  "jsdelivr": "dist/agen-rpc.min.js",
-  "module": "dist/agen-rpc-esm.js",
+  "type": "module",
+  "files": [
+    "dist/**/package.json",
+    "dist/**/*.js",
+    "src/**/*.js"
+  ],
+  "main": "dist/esm/agen-rpc-esm.js",
+  "module": "dist/esm/agen-rpc-esm.js",
+  "jsdelivr": "dist/cjs/agen-rpc.min.js",
+  "unpkg": "dist/cjs/agen-rpc.min.js",
+  "exports": {
+    "package.json": "./package.json",
+    "umd": "./dist/cjs/agen-rpc.min.js",
+    "require": "./dist/cjs/agen-rpc.js",
+    "default": "./dist/esm/agen-rpc-esm.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/agenjs/agen-rpc.git"
   },
-  "files": [
-    "dist/**/*.js",
-    "src/**/*.js"
-  ],
   "scripts": {
     "pretest": "rollup -c",
-    "test": "node -r esm ./test/index.js && eslint src",
+    "test": "node ./test/index.js && eslint src",
     "prepublishOnly": "rm -rf dist && yarn test",
     "postpublish": "zip -j dist/agen-rpc.zip -- LICENSE README.md dist/*.js"
   },
   "sideEffects": false,
   "dependencies": {
-    "@agen/utils": "^0.8.4",
+    "@agen/utils": "^0.8.10",
     "pbf": "^3.2",
     "protocol-buffers-schema": "^3.5"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-node-resolve": "13.0.0",
+    "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-json": "^4.1.0",
-    "@rollup/plugin-node-resolve": "^11.1.0",
     "eslint": "7",
-    "esm": "^3",
     "rollup": "2",
+    "rollup-plugin-generate-package-json": "3",
     "rollup-plugin-terser": "7",
-    "tape": "^5.1.1",
-    "tape-await": "^0.1.2"
+    "tape": "4",
+    "tape-await": "0.1"
   },
   "publishConfig": {
     "access": "public"

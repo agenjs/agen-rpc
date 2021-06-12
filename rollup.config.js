@@ -1,5 +1,7 @@
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from '@rollup/plugin-commonjs';
+import generatePackageJson from 'rollup-plugin-generate-package-json'
+
 import json from "@rollup/plugin-json";
 
 import {terser} from "rollup-plugin-terser";
@@ -11,7 +13,7 @@ const config = {
   input: "src/index.js",
   external,
   output: {
-    file: `dist/${distName}.js`,
+    file: `dist/cjs/${distName}.js`,
     name: "agen",
     format: "umd",
     indent: false,
@@ -22,7 +24,13 @@ const config = {
   plugins: [
     nodeResolve(),
     commonjs(),
-    json()
+    json(),
+    generatePackageJson({
+      outputFolder: 'dist/cjs',
+      baseContents: {
+        "type": "commonjs"
+      }
+    })
   ]
 };
 
@@ -32,7 +40,7 @@ export default [
     ...config,
     output: {
       ...config.output,
-      file: `dist/${distName}.min.js`
+      file: `dist/cjs/${distName}.min.js`
     },
     plugins: [
       ...config.plugins,
@@ -47,7 +55,7 @@ export default [
     ...config,
     output: {
       ...config.output,
-      file: `dist/${distName}-esm.js`,
+      file: `dist/esm/${distName}-esm.js`,
       format : "es"
     },
   },
@@ -55,7 +63,7 @@ export default [
     ...config,
     output: {
       ...config.output,
-      file: `dist/${distName}-esm.min.js`,
+      file: `dist/esm/${distName}-esm.min.js`,
       format: "es"
     },
     plugins: [

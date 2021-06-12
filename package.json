@@ -35,7 +35,7 @@
     "pretest": "rollup -c",
     "test": "node ./test/index.js && eslint src",
     "prepublishOnly": "rm -rf dist && yarn test",
-    "postpublish": "zip -j dist/agen-rpc.zip -- LICENSE README.md dist/*.js"
+    "postpublish": "zip dist/agen-rpc.zip -- LICENSE README.md dist/**"
   },
   "sideEffects": false,
   "dependencies": {},

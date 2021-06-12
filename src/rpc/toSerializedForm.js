@@ -1,4 +1,4 @@
-import map from '@agen/utils/src/map.js';
+import { map } from '@agen/utils';
 import newCallsAdapter from './newCallsAdapter.js';
 
 export default function toSerializedForm({ requestType, responseType, newSerializer, newDeserializer }) {

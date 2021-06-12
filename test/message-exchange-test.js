@@ -1,5 +1,5 @@
 import tape from "tape-await";
-import { protobuf, rpc } from '../dist/agen-rpc-esm.js';
+import { protobuf, rpc } from '../src/index.js';
 import EchoService from './service.js';
 import EchoServiceServiceSchema from './service.schema.js';
 

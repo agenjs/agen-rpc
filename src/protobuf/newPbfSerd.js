@@ -1,5 +1,5 @@
 import Pbf from 'pbf';
-import compile from 'pbf/compile';
+import compile from 'pbf/compile.js';
 
 export default function newPbfSerd(ast) {
   function get(obj, path) {

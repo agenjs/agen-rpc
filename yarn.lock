@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@agen/utils@^0.8.10":
-  version "0.8.10"
-  resolved "https://registry.yarnpkg.com/@agen/utils/-/utils-0.8.10.tgz#eb3d446eb38e6342803c7d912e441607965b429c"
-  integrity sha512-t0Q34xXptwPtWtc1ypUspZEokN7+949znN6vPXc6cHBCKz35UVlh4qH/ogLpkHn4cSKQDIEYlX7oHDX8/7M01g==
+"@agen/utils@^0.8.12":
+  version "0.8.12"
+  resolved "https://registry.yarnpkg.com/@agen/utils/-/utils-0.8.12.tgz#446bf970b313b8227a2bc5f126f8ab75ec2b81ed"
+  integrity sha512-eS4Y8VjPlpdfWeUZu/cZV+/Aazh99A10peDlu3XJDOqPv1kS430gHWYAHZUaRFZ0ebFotYIfM84YPi/AxI/NoA==
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4":
   version "7.12.13"
@@ -64,10 +64,10 @@
   dependencies:
     "@rollup/pluginutils" "^3.0.8"
 
-"@rollup/plugin-node-resolve@13.0.0":
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/@rollup/plugin-node-resolve/-/plugin-node-resolve-13.0.0.tgz#352f07e430ff377809ec8ec8a6fd636547162dc4"
-  integrity sha512-41X411HJ3oikIDivT5OKe9EZ6ud6DXudtfNrGbC4nniaxx2esiWjkLOzgnZsWq1IM8YIeL2rzRGLZLBjlhnZtQ==
+"@rollup/plugin-node-resolve@11":
+  version "11.2.1"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-node-resolve/-/plugin-node-resolve-11.2.1.tgz#82aa59397a29cd4e13248b106e6a4a1880362a60"
+  integrity sha512-yc2n43jcqVyGE2sqV5/YCmocy9ArjVAP/BeXyTtADTBBX6V0e5UMqwO8CdQ0kzjb6zu5P1qMzsScCMRvE9OlVg==
   dependencies:
     "@rollup/pluginutils" "^3.1.0"
     "@types/resolve" "1.17.1"

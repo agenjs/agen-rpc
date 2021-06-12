@@ -1,6 +1,6 @@
 import tape from "tape-await";
 import { newServer, newClient } from '../src/index.js';
-import { protobuf } from '../dist/agen-rpc-esm.js';
+import { protobuf } from '../src/index.js';
 import EchoService from './service.js';
 import EchoServiceServiceSchema from './service.schema.js';
 import newChannel from './newChannel.js';
